@@ -1,4 +1,4 @@
-# 待辦清單網頁（Todo List）
+# 待辦清單網頁（To do List）
 
 這是一個使用 HTML、CSS、JavaScript 製作的簡易待辦清單網站，支援以下功能：
 
