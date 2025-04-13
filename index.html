@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>待辦清單</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 2em;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .todo-container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: white;
+      padding: 1em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input[type="text"] {
+      width: 70%;
+      padding: 0.5em;
+    }
+
+    button {
+      padding: 0.5em;
+      margin-left: 0.5em;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5em 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    li.completed span {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div class="todo-container">
+    <h1>待辦清單</h1>
+    <input id="task-input" type="text" placeholder="輸入任務" />
+    <button onclick="addTask()">新增</button>
+    <ul id="task-list"></ul>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById('task-input');
+    const taskList = document.getElementById('task-list');
+
+    // 讀取 localStorage 的資料
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // 顯示任務
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        if (task.completed) li.classList.add('completed');
+
+        const span = document.createElement('span');
+        span.textContent = task.name;
+        span.onclick = () => toggleComplete(index);
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '刪除';
+        delBtn.onclick = () => deleteTask(index);
+
+        li.appendChild(span);
+        li.appendChild(delBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const name = taskInput.value.trim();
+      if (name === '') return;
+      tasks.push({ name, completed: false });
+      taskInput.value = '';
+      saveAndRender();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveAndRender();
+    }
+
+    function toggleComplete(index) {
+      tasks[index].completed = !tasks[index].completed;
+      saveAndRender();
+    }
+
+    function saveAndRender() {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    renderTasks(); // 初始載入
+  </script>
+</body>
+</html>
